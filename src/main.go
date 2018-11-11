@@ -1,14 +1,27 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
+	"os"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	filename := "" // TODO: Read filename somehow
+	connStr := os.Getenv("DATABASE_URL")
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
-	game, err := parseSpreadsheet(filename)
+	filename := os.Getenv("FILENAME") // TODO: Read filename somehow
+
+	match, err := parseSpreadsheet(filename)
 	if err == nil {
-		fmt.Println(game)
+		saveMatch(db, match)
+		fmt.Println(match)
 	}
 }
