@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -84,7 +83,6 @@ func parseSpreadsheet(reader io.ReadSeeker) (*Match, error) {
 			if err != nil {
 				return nil, errors.New("can't parse date")
 			}
-			fmt.Println(match)
 			return &match, nil
 
 		}

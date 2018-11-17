@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"os"
 
@@ -10,7 +11,7 @@ import (
 
 var db *sql.DB
 
-func Init() {
+func connectDatabase() {
 	var err error
 	connStr := os.Getenv("DATABASE_URL")
 	db, err = sql.Open("postgres", connStr)
@@ -19,9 +20,25 @@ func Init() {
 	}
 }
 
-func saveMatch(match *Match) {
+func saveMatch(match *Match) error {
 	var err error
 	var teamIDs [2]*int
+
+	// Check if match already exists
+	rows, err := db.Query(`
+		SELECT id
+		FROM matches
+		WHERE id = $1
+	`, match.ID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if rows.Next() {
+		return errors.New("already exists")
+	}
+
 	for i, team := range []Team{match.Home, match.Guest} {
 		var teamID int
 		err = db.QueryRow(`
@@ -82,4 +99,6 @@ func saveMatch(match *Match) {
 	if err != nil {
 		panic(err)
 	}
+
+	return nil
 }
