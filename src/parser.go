@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"io"
 	"strconv"
 	"strings"
 	"time"
@@ -11,31 +13,31 @@ import (
 
 // Reception stats
 type Reception struct {
-	Perfect int
-	Good    int
-	Bad     int
-	Fault   int
+	Excellent int
+	Positive  int
+	Negative  int
+	Error     int
 }
 
 // Attack stats
 type Attack struct {
-	Kill    int
-	NotKill int
-	Fault   int
+	Killed    int
+	NotKilled int
+	Error     int
 }
 
 // Serve stats
 type Serve struct {
-	Ace   int
-	Hard  int
-	Easy  int
-	Fault int
+	Ace      int
+	Positive int
+	Negative int
+	Fault    int
 }
 
 // Block stats
 type Block struct {
-	Score   int
-	Damping int
+	Killed   int
+	Positive int
 }
 
 // Player stats
@@ -64,9 +66,9 @@ type Match struct {
 	Guest Team
 }
 
-func parseSpreadsheet(filename string) (*Match, error) {
+func parseSpreadsheet(reader io.ReadSeeker) (*Match, error) {
 	var match Match
-	if xlFile, err := xls.Open(filename, "utf-8"); err == nil {
+	if xlFile, err := xls.OpenReader(reader, "utf-8"); err == nil {
 		if sheet := xlFile.GetSheet(0); sheet != nil {
 			teams := readTeams(sheet)
 
@@ -82,14 +84,15 @@ func parseSpreadsheet(filename string) (*Match, error) {
 			if err != nil {
 				return nil, errors.New("can't parse date")
 			}
-
+			fmt.Println(match)
 			return &match, nil
+
 		}
 
 		return nil, errors.New("file doen't contain any sheets")
 	}
 
-	return nil, errors.New("can't open file:" + filename)
+	return nil, errors.New("can't open file")
 }
 
 func readTeams(sheet *xls.WorkSheet) [2]Team {
@@ -133,7 +136,7 @@ func readPlayers(sheet *xls.WorkSheet, startRow int) []Player {
 
 		number, _ := strconv.Atoi(nameSplit[0])
 
-		defence := collectPoints(row, 2, 4)
+		reception := collectPoints(row, 2, 4)
 		attack := collectPoints(row, 8, 3)
 		serve := collectPoints(row, 13, 4)
 		block := collectPoints(row, 19, 2)
@@ -141,7 +144,7 @@ func readPlayers(sheet *xls.WorkSheet, startRow int) []Player {
 		players = append(players, Player{
 			Number:    number,
 			Name:      strings.Join(nameSplit[1:3], " "),
-			Reception: Reception{defence[0], defence[1], defence[2], defence[3]},
+			Reception: Reception{reception[0], reception[1], reception[2], reception[3]},
 			Attack:    Attack{attack[0], attack[1], attack[2]},
 			Serve:     Serve{serve[0], serve[1], serve[2], serve[3]},
 			Block:     Block{block[0], block[1]},

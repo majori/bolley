@@ -2,9 +2,24 @@ package main
 
 import (
 	"database/sql"
+	"log"
+	"os"
+
+	_ "github.com/lib/pq"
 )
 
-func saveMatch(db *sql.DB, match *Match) {
+var db *sql.DB
+
+func Init() {
+	var err error
+	connStr := os.Getenv("DATABASE_URL")
+	db, err = sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func saveMatch(match *Match) {
 	var err error
 	var teamIDs [2]*int
 	for i, team := range []Team{match.Home, match.Guest} {
@@ -28,26 +43,26 @@ func saveMatch(db *sql.DB, match *Match) {
 			var insertedID int
 			err = db.QueryRow(`
 				INSERT INTO player_stats VALUES (
-					default, $1, $2, $3, $4, $5, $6,
-					$7, $8, $9, $10, $11, $12, $13,
-					$14, $15
+					default, $1, $2, $3, $4, $5, $6, $7,
+					$8, $9, $10, $11, $12, $13, $14, $15, $16
 				) returning id;
 			`,
 				teamID,
+				player.Number,
 				player.Name,
-				player.Reception.Perfect,
-				player.Reception.Good,
-				player.Reception.Bad,
-				player.Reception.Fault,
-				player.Attack.Kill,
-				player.Attack.NotKill,
-				player.Attack.Fault,
+				player.Reception.Excellent,
+				player.Reception.Positive,
+				player.Reception.Negative,
+				player.Reception.Error,
+				player.Attack.Killed,
+				player.Attack.NotKilled,
+				player.Attack.Error,
 				player.Serve.Ace,
-				player.Serve.Hard,
-				player.Serve.Easy,
+				player.Serve.Positive,
+				player.Serve.Negative,
 				player.Serve.Fault,
-				player.Block.Score,
-				player.Block.Damping,
+				player.Block.Killed,
+				player.Block.Positive,
 			).Scan(&insertedID)
 
 			if err != nil {
@@ -56,9 +71,15 @@ func saveMatch(db *sql.DB, match *Match) {
 		}
 	}
 
-	db.QueryRow(`
+	var insertedID int
+	err = db.QueryRow(`
 		INSERT INTO matches
-		VALUES (default, $1, $2, $3, $4)
+		VALUES ($1, $2, $3, $4, $5)
 		returning id;
-	`, match.Date, match.Hall, *teamIDs[0], *teamIDs[1])
+	`, match.ID, match.Date, match.Hall, *teamIDs[0], *teamIDs[1],
+	).Scan(&insertedID)
+
+	if err != nil {
+		panic(err)
+	}
 }

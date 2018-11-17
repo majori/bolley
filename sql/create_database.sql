@@ -10,28 +10,29 @@ CREATE TABLE IF NOT EXISTS team_stats (
 CREATE TABLE IF NOT EXISTS player_stats (
   id serial PRIMARY KEY,
   team_stat_id int REFERENCES team_stats (id),
+  number int,
   name varchar(255),
 
-  reception_perfect int,
-  reception_good int,
-  reception_bad int,
-  reception_fault int,
+  reception_excellent int,
+  reception_positive int,
+  reception_negative int,
+  reception_error int,
 
-  attack_kill int,
-  attack_not_kill int,
-  attack_fault int,
+  attack_killed int,
+  attack_not_killed int,
+  attack_error int,
 
   serve_ace int,
-  serve_hard int,
-  serve_easy int,
-  serve_fault int,
+  serve_positive int,
+  serve_negative int,
+  serve_error int,
 
-  block_score int,
-  block_damping int
+  block_killed int,
+  block_positive int
 );
 
 CREATE TABLE IF NOT EXISTS matches (
-  id serial PRIMARY KEY,
+  id int PRIMARY KEY,
   date date,
   hall varchar(255),
   home_team int REFERENCES team_stats (id),
