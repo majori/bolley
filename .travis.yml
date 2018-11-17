@@ -1,0 +1,13 @@
+language: go
+go:
+  - "1.11"
+services:
+  - postgresql
+  - docker
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - export REPO=$DOCKER_USERNAME/bolley
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -t $REPO:$TAG .
+  - docker push $REPO
