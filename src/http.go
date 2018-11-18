@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,9 +19,10 @@ func listen() {
 
 	// Private
 	private := r.Group("/")
-	private.Use(TokenAuthMiddleware())
+	private.Use(tokenAuthMiddleware())
 	private.POST("/upload", upload)
-	r.Run(":" + os.Getenv("PORT")) // listen and serve on 0.0.0.0:8080
+
+	r.Run(":" + os.Getenv("PORT"))
 }
 
 func respondWithError(code int, message string, c *gin.Context) {
@@ -29,16 +32,18 @@ func respondWithError(code int, message string, c *gin.Context) {
 	c.Abort()
 }
 
-func TokenAuthMiddleware() gin.HandlerFunc {
+func tokenAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.Request.FormValue("api_token")
+		authHeader := c.GetHeader("Authorization")
 
-		if token == "" {
+		if authHeader == "" {
 			respondWithError(401, "API token required", c)
 			return
 		}
 
-		if token != os.Getenv("API_TOKEN") {
+		parts := strings.SplitN(authHeader, " ", 2)
+		if !(len(parts) == 2 && parts[0] == "Bearer") ||
+			(parts[1] != os.Getenv("API_TOKEN")) {
 			respondWithError(401, "Invalid API token", c)
 			return
 		}
@@ -54,15 +59,20 @@ func pong(c *gin.Context) {
 // upload logic
 func upload(c *gin.Context) {
 	buff, err := ioutil.ReadAll(c.Request.Body)
+	defer c.Request.Body.Close()
 	if err != nil {
 		panic(err)
 	}
-	defer c.Request.Body.Close()
 	match, _ := parseSpreadsheet(bytes.NewReader(buff))
-	err = saveMatch(match)
+	err = createMatch(match)
 	if err != nil {
-		c.String(400, err.Error())
+		switch err.Error() {
+		case DBErrDublicate:
+			respondWithError(http.StatusConflict, "Match already exists", c)
+		default:
+			panic(err)
+		}
 		return
 	}
-	c.String(200, "OK")
+	c.JSON(200, match)
 }

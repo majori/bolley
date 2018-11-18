@@ -9,6 +9,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const (
+	DBErrDublicate = "dublicate"
+)
+
 var db *sql.DB
 
 func connectDatabase() {
@@ -20,7 +24,7 @@ func connectDatabase() {
 	}
 }
 
-func saveMatch(match *Match) error {
+func createMatch(match *Match) error {
 	var err error
 	var teamIDs [2]*int
 
@@ -36,12 +40,17 @@ func saveMatch(match *Match) error {
 	}
 
 	if rows.Next() {
-		return errors.New("already exists")
+		return errors.New(DBErrDublicate)
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		panic(err)
 	}
 
 	for i, team := range []Team{match.Home, match.Guest} {
 		var teamID int
-		err = db.QueryRow(`
+		err = tx.QueryRow(`
 			INSERT INTO team_stats
 			VALUES(default, $1, $2, $3, $4, $5)
 			returning id;
@@ -51,6 +60,7 @@ func saveMatch(match *Match) error {
 		).Scan(&teamID)
 
 		if err != nil {
+			tx.Rollback()
 			panic(err)
 		}
 
@@ -58,7 +68,7 @@ func saveMatch(match *Match) error {
 
 		for _, player := range team.Players {
 			var insertedID int
-			err = db.QueryRow(`
+			err = tx.QueryRow(`
 				INSERT INTO player_stats VALUES (
 					default, $1, $2, $3, $4, $5, $6, $7,
 					$8, $9, $10, $11, $12, $13, $14, $15, $16
@@ -83,13 +93,14 @@ func saveMatch(match *Match) error {
 			).Scan(&insertedID)
 
 			if err != nil {
+				tx.Rollback()
 				panic(err)
 			}
 		}
 	}
 
 	var insertedID int
-	err = db.QueryRow(`
+	err = tx.QueryRow(`
 		INSERT INTO matches
 		VALUES ($1, $2, $3, $4, $5)
 		returning id;
@@ -97,8 +108,10 @@ func saveMatch(match *Match) error {
 	).Scan(&insertedID)
 
 	if err != nil {
+		tx.Rollback()
 		panic(err)
 	}
 
+	tx.Commit()
 	return nil
 }
