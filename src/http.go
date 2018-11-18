@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -16,6 +17,7 @@ func listen() {
 	// Public
 	public := r.Group("/")
 	public.GET("/ping", pong)
+	public.GET("/team", teamStats)
 
 	// Private
 	private := r.Group("/")
@@ -75,4 +77,13 @@ func upload(c *gin.Context) {
 		return
 	}
 	c.JSON(200, match)
+}
+
+func teams(c *gin.Context) {
+
+}
+
+func teamStats(c *gin.Context) {
+	stats := getTeamStats("LP Kang 1")
+	fmt.Println(stats)
 }
