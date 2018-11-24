@@ -1,10 +1,14 @@
 FROM golang:1.11.1 as builder
 
+ENV CGO_ENABLED 0
+ENV GO111MODULE on
+ENV GOOS=linux
+
 WORKDIR /go/src/app
 COPY . .
 
 RUN go get -d -v ./...
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app ./src
+RUN go build -a -installsuffix cgo -o app
 
 FROM scratch
 ENV GIN_MODE release

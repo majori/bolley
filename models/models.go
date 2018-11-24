@@ -1,19 +1,12 @@
-package main
+package models
 
 import (
 	"database/sql"
 	"errors"
-	"log"
-	"os"
 
-	_ "github.com/lib/pq"
+	"github.com/majori/bolley/db"
+	"github.com/majori/bolley/parser"
 )
-
-const (
-	DBErrDublicate = "dublicate"
-)
-
-var db *sql.DB
 
 type CumulativeStats struct {
 	name              string
@@ -29,16 +22,12 @@ type CumulativeStats struct {
 	won_lost          int
 }
 
-func connectDatabase() {
-	var err error
-	connStr := os.Getenv("DATABASE_URL")
-	db, err = sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+const (
+	DBErrDublicate = "dublicate"
+)
 
-func createMatch(match *Match) error {
+func CreateMatch(match *parser.Match) error {
+	db := db.GetDB()
 	var err error
 	var teamIDs [2]*int
 
@@ -62,7 +51,7 @@ func createMatch(match *Match) error {
 		panic(err)
 	}
 
-	for i, team := range []Team{match.Home, match.Guest} {
+	for i, team := range []parser.Team{match.Home, match.Guest} {
 		var teamID int
 		err = tx.QueryRow(`
 			INSERT INTO team_stats
@@ -130,11 +119,12 @@ func createMatch(match *Match) error {
 	return nil
 }
 
-func getTeams() {
-	
+func GetTeams() {
+
 }
 
-func getTeamStats(name string) []CumulativeStats {
+func GetTeamStats(name string) []CumulativeStats {
+	db := db.GetDB()
 	rows, err := db.Query(`
 		WITH cumulative_stats AS (
 			SELECT

@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"errors"
@@ -65,7 +65,7 @@ type Match struct {
 	Guest Team
 }
 
-func parseSpreadsheet(reader io.ReadSeeker) (*Match, error) {
+func Parse(reader io.ReadSeeker) (*Match, error) {
 	var match Match
 	if xlFile, err := xls.OpenReader(reader, "utf-8"); err == nil {
 		if sheet := xlFile.GetSheet(0); sheet != nil {
