@@ -79,10 +79,11 @@ func Parse(reader io.ReadSeeker) (*Match, error) {
 
 			match.ID = sheet.Row(2).Col(12)
 			match.Hall = sheet.Row(4).Col(15)
-			match.Date, err = time.Parse(time.RFC3339, sheet.Row(3).Col(12))
-			if err != nil {
-				return nil, errors.New("can't parse date")
-			}
+			// TODO: Weird problem with date parsing
+			// match.Date, err = time.Parse(time.RFC3339, sheet.Row(3).Col(12))
+			// if err != nil {
+			// 	return nil, err
+			// }
 			return &match, nil
 
 		}

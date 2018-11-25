@@ -1,11 +1,9 @@
 package server
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/majori/bolley/controllers"
-	"github.com/majori/bolley/middleware"
+	"github.com/majori/bolley/middlewares"
 )
 
 func NewRouter() *gin.Engine {
@@ -19,16 +17,12 @@ func NewRouter() *gin.Engine {
 }
 
 func publicRoutes(group *gin.RouterGroup) {
-	group.GET("/index", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Main website",
-		})
-	})
+	group.GET("/", controllers.Teams)
 	group.GET("/ping", controllers.Pong)
 	group.GET("/team", controllers.TeamStats)
 }
 
 func apiRoutes(group *gin.RouterGroup) {
-	group.Use(middleware.TokenAuthMiddleware())
+	group.Use(middlewares.TokenAuth())
 	group.POST("/upload", controllers.Upload)
 }

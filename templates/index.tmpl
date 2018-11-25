@@ -1,5 +1,13 @@
 <html>
-	<h1>
-		{{ .title }}
-	</h1>
+	<head>
+
+	</head>
+	<body>
+		<h1>
+			{{ .Title }}
+		</h1>
+		{{range .Teams}}
+			<h2><a href="/teams/{{ . }}">{{ . }}</a></h2>
+		{{ end }}
+	</body>
 </html>

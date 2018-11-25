@@ -11,6 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var matchModel = new(models.Match)
+var teamModel = new(models.Team)
+
 // upload logic
 func Upload(c *gin.Context) {
 	buff, err := ioutil.ReadAll(c.Request.Body)
@@ -19,8 +22,12 @@ func Upload(c *gin.Context) {
 		panic(err)
 	}
 
-	match, _ := parser.Parse(bytes.NewReader(buff))
-	err = models.CreateMatch(match)
+	match, err := parser.Parse(bytes.NewReader(buff))
+	if (err != nil) {
+		panic(err)
+	}
+
+	err = matchModel.Create(match)
 	if err != nil {
 		switch err.Error() {
 		case models.DBErrDublicate:
@@ -34,11 +41,15 @@ func Upload(c *gin.Context) {
 }
 
 func Teams(c *gin.Context) {
-
+	teams := teamModel.GetAll()
+	c.HTML(http.StatusOK, "index.tmpl", gin.H{
+		"Title": "Main website",
+		"Teams": teams,
+	})
 }
 
 func TeamStats(c *gin.Context) {
-	stats := models.GetTeamStats("LP Kang 1")
+	stats := teamModel.GetCumulativeStats("LP Kang 1")
 	fmt.Println(stats)
 }
 

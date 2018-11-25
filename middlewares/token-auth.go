@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"os"
@@ -8,7 +8,7 @@ import (
 	"github.com/majori/bolley/controllers"
 )
 
-func TokenAuthMiddleware() gin.HandlerFunc {
+func TokenAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 
