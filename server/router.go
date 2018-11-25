@@ -18,8 +18,7 @@ func NewRouter() *gin.Engine {
 
 func publicRoutes(group *gin.RouterGroup) {
 	group.GET("/", controllers.Teams)
-	group.GET("/ping", controllers.Pong)
-	group.GET("/team", controllers.TeamStats)
+	group.GET("/teams/:team-name", controllers.TeamStats)
 }
 
 func apiRoutes(group *gin.RouterGroup) {

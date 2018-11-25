@@ -6,5 +6,9 @@ import (
 
 func Init() {
 	r := NewRouter()
-	r.Run(":" + os.Getenv("PORT"))
+	var domain string
+	if os.Getenv("APP_ENV") != "production" {
+		domain = "localhost"
+	}
+	r.Run(domain + ":" + os.Getenv("PORT"))
 }

@@ -3,6 +3,7 @@ FROM golang:1.11.1 as builder
 ENV CGO_ENABLED 0
 ENV GO111MODULE on
 ENV GOOS=linux
+ENV APP_ENV production
 
 WORKDIR /go/src/app
 COPY . .

@@ -1,13 +1,7 @@
-<html>
-	<head>
+{{ template "header" }}
 
-	</head>
-	<body>
-		<h1>
-			{{ .Title }}
-		</h1>
-		{{range .Teams}}
-			<h2><a href="/teams/{{ . }}">{{ . }}</a></h2>
-		{{ end }}
-	</body>
-</html>
+{{range .Teams}}
+	<h2><a href="/teams/{{ . }}">{{ . }}</a></h2>
+{{ end }}
+
+{{ template "footer" }}

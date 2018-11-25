@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	
@@ -49,12 +48,12 @@ func Teams(c *gin.Context) {
 }
 
 func TeamStats(c *gin.Context) {
-	stats := teamModel.GetCumulativeStats("LP Kang 1")
-	fmt.Println(stats)
-}
-
-func Pong(c *gin.Context) {
-	c.String(200, "pong")
+	name := c.Param("team-name")
+	stats := teamModel.GetCumulativeStats(name)
+	c.HTML(http.StatusOK, "team.tmpl", gin.H{
+		"TeamName": name,
+		"Stats": stats,
+	})
 }
 
 func RespondWithError(code int, message string, c *gin.Context) {

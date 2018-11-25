@@ -9,17 +9,17 @@ import (
 type Team struct{}
 
 type CumulativeStats struct {
-	name              string
-	points_scored     int
-	points_per_match  float32
-	attacks           int
-	blocks            int
-	blocks_per_match  float32
-	aces              int
-	aces_per_match    float32
-	attack_precent    sql.NullFloat64
-	reception_precent sql.NullFloat64
-	won_lost          int
+	Name             string
+	PointsScored     int
+	PointsPerMatch   float32
+	Attacks          int
+	Blocks           int
+	BlocksPerMatch   float32
+	Aces             int
+	AcesPerMatch     float32
+	AttackPrecent    sql.NullFloat64
+	ReceptionPrecent sql.NullFloat64
+	WonLost          int
 }
 
 func (t Team) GetAll() []string {
@@ -94,10 +94,10 @@ func (t Team) GetCumulativeStats(name string) []CumulativeStats {
 	for rows.Next() {
 		stats := CumulativeStats{}
 		err = rows.Scan(
-			&stats.name, &stats.points_scored, &stats.points_per_match,
-			&stats.attacks, &stats.blocks, &stats.blocks_per_match, &stats.aces,
-			&stats.aces_per_match, &stats.attack_precent, &stats.reception_precent,
-			&stats.won_lost,
+			&stats.Name, &stats.PointsScored, &stats.PointsPerMatch,
+			&stats.Attacks, &stats.Blocks, &stats.BlocksPerMatch, &stats.Aces,
+			&stats.AcesPerMatch, &stats.AttackPrecent, &stats.ReceptionPrecent,
+			&stats.WonLost,
 		)
 		if err != nil {
 			panic(err)
