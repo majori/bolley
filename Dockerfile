@@ -3,7 +3,6 @@ FROM golang:1.11.1 as builder
 ENV CGO_ENABLED 0
 ENV GO111MODULE on
 ENV GOOS=linux
-ENV APP_ENV production
 
 WORKDIR /go/src/app
 COPY . .
@@ -14,6 +13,7 @@ RUN go build -a -installsuffix cgo -o app
 FROM scratch
 ENV GIN_MODE release
 ENV PORT 8080
+ENV APP_ENV production
 
 WORKDIR /
 COPY --from=builder /go/src/app /
