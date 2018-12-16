@@ -1,52 +1,54 @@
 {{ template "header" }}
 
-<h1>{{ .TeamName }}</h1>
+<div class="team">
+  <h1>{{ .TeamName }}</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Points scored</th>
-      <th>Points/match</th>
-      <th>Attacks</th>
-      <th>Blocks</th>
-      <th>Blocks/match</th>
-      <th>Aces</th>
-      <th>Aces/match</th>
-      <th>Attack %</th>
-      <th>Reception %</th>
-      <th>Won/lost</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{ range .Stats }}
+  <table>
+    <thead>
       <tr>
-        <td>{{ .Name }}</td>
-        <td>{{ .PointsScored }}</td>
-        <td>{{ .PointsPerMatch }}</td>
-        <td>{{ .Attacks }}</td>
-        <td>{{ .Blocks }}</td>
-        <td>{{ .BlocksPerMatch }}</td>
-        <td>{{ .Aces }}</td>
-        <td>{{ .AcesPerMatch }}</td>
-        <td>
-          {{if .AttackPrecent.Valid }}
-            {{.AttackPrecent.Float64}}
-          {{else}}
-          -
-          {{end}}
-        </td>
-        <td>
-          {{if .ReceptionPrecent.Valid }}
-            {{.ReceptionPrecent.Float64}}
-          {{else}}
-          -
-          {{end}}
-        </td>
-        <td>{{ .WonLost }}</td>
+        <th>Name</th>
+        <th>Points scored</th>
+        <th>Points/match</th>
+        <th>Attacks</th>
+        <th>Blocks</th>
+        <th>Blocks/match</th>
+        <th>Aces</th>
+        <th>Aces/match</th>
+        <th>Attack %</th>
+        <th>Reception %</th>
+        <th>Won/lost</th>
       </tr>
-    {{ end }}    
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {{ range .Stats }}
+        <tr>
+          <td>{{ .Name }}</td>
+          <td>{{ .PointsScored }}</td>
+          <td>{{ .PointsPerMatch }}</td>
+          <td>{{ .Attacks }}</td>
+          <td>{{ .Blocks }}</td>
+          <td>{{ .BlocksPerMatch }}</td>
+          <td>{{ .Aces }}</td>
+          <td>{{ .AcesPerMatch }}</td>
+          <td>
+            {{if .AttackPrecent.Valid }}
+              {{.AttackPrecent.Float64}}
+            {{else}}
+            -
+            {{end}}
+          </td>
+          <td>
+            {{if .ReceptionPrecent.Valid }}
+              {{.ReceptionPrecent.Float64}}
+            {{else}}
+            -
+            {{end}}
+          </td>
+          <td>{{ .WonLost }}</td>
+        </tr>
+      {{ end }}    
+    </tbody>
+  </table>
+</div>
 
 {{ template "footer" }}

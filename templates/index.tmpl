@@ -1,7 +1,15 @@
 {{ template "header" }}
 
-{{range .Teams}}
-	<h2><a href="/teams/{{ . }}">{{ . }}</a></h2>
-{{ end }}
+<div class="teams">
+	{{range .Teams}}
+		<div class="teams-card">
+			<a href="/teams/{{ . }}">
+				<div class="teams-card-content">
+					<h2>{{ . }}</h2>
+				</div>
+			</a>
+		</div>
+	{{ end }}
+</div>
 
 {{ template "footer" }}

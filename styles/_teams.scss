@@ -1,0 +1,24 @@
+.teams {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80%;
+  margin: auto;
+
+  .teams-card {
+    border-radius: 7px;
+    margin: 10px;
+
+    .teams-card-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 200px;
+      height: 100px;
+      border: 2px solid rgb(255, 38, 78);
+      border-radius: 7px;
+      color: rgb(255, 38, 78);
+    }
+  }
+}

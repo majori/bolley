@@ -9,6 +9,7 @@ import (
 func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.LoadHTMLGlob("templates/*")
+	r.Static("/assets", "assets")
 
 	publicRoutes(r.Group("/"))
 	apiRoutes(r.Group("/api/v1"))

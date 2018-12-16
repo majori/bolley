@@ -1,0 +1,12 @@
+.team {
+  table {
+    width: 100%;
+    max-width: 1000px;
+    text-align: center;
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 3px 0;
+    }
+  }
+}
