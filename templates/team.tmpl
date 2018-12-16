@@ -7,6 +7,7 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>Matches played</th>
         <th>Points scored</th>
         <th>Points/match</th>
         <th>Attacks</th>
@@ -23,6 +24,7 @@
       {{ range .Stats }}
         <tr>
           <td>{{ .Name }}</td>
+          <td>{{ .MatchesPlayed }}</td>
           <td>{{ .PointsScored }}</td>
           <td>{{ .PointsPerMatch }}</td>
           <td>{{ .Attacks }}</td>

@@ -10,6 +10,7 @@ type Team struct{}
 
 type CumulativeStats struct {
 	Name             string
+	MatchesPlayed    int
 	PointsScored     int
 	PointsPerMatch   float32
 	Attacks          int
@@ -72,6 +73,7 @@ func (t Team) GetCumulativeStats(name string) []CumulativeStats {
 		)
 		SELECT
 			cs.name,
+			matches_played,
 			(cs.at_ki + cs.se_ac + cs.bl_ki) AS points_scored,
 			ROUND((cs.at_ki + cs.se_ac + cs.bl_ki)::numeric / cs.matches_played, 1) AS points_per_match,
 			cs.at_ki AS attacks,
@@ -94,7 +96,7 @@ func (t Team) GetCumulativeStats(name string) []CumulativeStats {
 	for rows.Next() {
 		stats := CumulativeStats{}
 		err = rows.Scan(
-			&stats.Name, &stats.PointsScored, &stats.PointsPerMatch,
+			&stats.Name, &stats.MatchesPlayed, &stats.PointsScored, &stats.PointsPerMatch,
 			&stats.Attacks, &stats.Blocks, &stats.BlocksPerMatch, &stats.Aces,
 			&stats.AcesPerMatch, &stats.AttackPrecent, &stats.ReceptionPrecent,
 			&stats.WonLost,
