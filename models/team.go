@@ -29,6 +29,7 @@ func (t Team) GetAll() []string {
 		SELECT name
 		FROM team_stats
 		GROUP BY name
+		ORDER BY COUNT(name) DESC
 	`)
 
 	if err != nil {
