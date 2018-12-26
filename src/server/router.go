@@ -2,13 +2,13 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/majori/bolley/controllers"
-	"github.com/majori/bolley/middlewares"
+	"github.com/majori/bolley/src/controllers"
+	"github.com/majori/bolley/src/middlewares"
 )
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
-	r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLGlob("src/templates/*")
 	r.Static("/assets", "assets")
 
 	publicRoutes(r.Group("/"))

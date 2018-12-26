@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 
-	"github.com/majori/bolley/db"
+	"github.com/majori/bolley/src/db"
 )
 
 type Team struct{}

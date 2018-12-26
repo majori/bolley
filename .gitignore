@@ -19,6 +19,6 @@ data/
 .env
 
 gin-bin
-bolley
 
 assets/styles.css
+app

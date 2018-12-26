@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/majori/bolley/controllers"
+	"github.com/majori/bolley/src/controllers"
 )
 
 func TokenAuth() gin.HandlerFunc {

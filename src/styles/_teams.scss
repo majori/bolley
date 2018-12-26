@@ -2,8 +2,12 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 80%;
   margin: auto;
+  width: 80%;
+
+  @include mobile-portrait-and-below {
+    width: 100%;
+  }
 
   .teams-card {
     border-radius: 7px;

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	
-	"github.com/majori/bolley/parser"
-	"github.com/majori/bolley/db"
+	"github.com/majori/bolley/src/parser"
+	"github.com/majori/bolley/src/db"
 )
 
 const (

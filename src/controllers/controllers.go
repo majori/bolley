@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	
-	"github.com/majori/bolley/parser"
-	"github.com/majori/bolley/models"
+	"github.com/majori/bolley/src/parser"
+	"github.com/majori/bolley/src/models"
 	"github.com/gin-gonic/gin"
 )
 
