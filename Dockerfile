@@ -15,7 +15,7 @@ RUN go build -a -installsuffix cgo -o app ./src
 FROM jbergknoff/sass as styles
 
 WORKDIR /home/root/
-COPY styles .
+COPY src/styles .
 RUN sass main.scss styles.css
 
 # ---------------------------------------
