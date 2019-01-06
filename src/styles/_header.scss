@@ -1,0 +1,16 @@
+.header {
+  font-family: 'Lobster', cursive;
+  font-size: 1.3rem;
+  color: white !important;
+  background: $red;
+  padding: 5px 0;
+  text-align: center;
+
+  & > div {
+    display: inline-block;
+  }
+
+  h1 {
+    margin: 0;
+  }
+}

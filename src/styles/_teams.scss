@@ -1,0 +1,32 @@
+.teams {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  width: 80%;
+
+  @include mobile-portrait-and-below {
+    width: 100%;
+  }
+
+  .teams-card {
+    border-radius: 7px;
+    margin: 10px;
+
+    &:hover {
+      box-shadow: 0 0 5px $red
+    }
+
+    .teams-card-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 200px;
+      height: 100px;
+      border: 2px solid $red;
+      border-radius: 7px;
+      color: $red;
+    }
+  }
+}
